@@ -1,56 +1,69 @@
-class ArrayHelper {
-    static take(array, n) {
+function ArrayHelper() {
+
+    function take(array, n) {
         return array.slice(0, n);
     }
 
-    static skip(array, n) {
+    function skip(array, n) {
         return array.slice(n, array.length);
     }
 
-    static map(array, callback){
+    function map(array, callback) {
         return array.map(callback);
     }
 
-    static reduce(array, callback, initialValue){
+    function reduce(array, callback, initialValue) {
         return array.reduce(callback, initialValue);
     }
 
-    static filter(array, callback){
+    function filter(array, callback) {
         return array.filter(callback);
     }
 
-    static foreach(array, callback){
-        return array.foreach(callback);
+    function foreach(array, callback) {
+        return array.forEach(callback);
+    }
+
+    return {
+        take: take,
+        skip: skip,
+        map: map,
+        reduce: reduce,
+        filter: filter,
+        foreach: foreach
     }
 }
 
-let testArray = ["Item1", "Item2", "Item3"];
-
-alert("Take command result " + ArrayHelper.take(testArray, 2));
-
-alert("Skip command result " + ArrayHelper.skip(testArray, 2));
-
-function mapFunction(item){
-    return "modified " + item;
+ArrayChainLibrary = {
+    chain: function (array) {
+        return {
+            take: function (number) {
+                array = array.slice(0, number);
+                return this;
+            },
+            skip: function (number) {
+                array = array.slice(number, array.length);
+                return this;
+            },
+            map: function (callback) {
+                array = array.map(callback);
+                return this;
+            },
+            reduce: function (callback, initialValue) {
+                array = array.reduce(callback, initialValue);
+                return this;
+            },
+            filter: function (callback) {
+                array = array.filter(callback);
+                return this;
+            },
+            foreach: function (callback) {
+                array = array.forEach(callback);
+                return this;
+            },
+            value: function(){
+                return array;
+            }
+        }
+    }
 }
-
-alert("Map command result " + ArrayHelper.map(testArray, mapFunction));
-
-function reduceFunction(result, item){
-    return result + item + ", ";
-}
-
-alert("Reduce command result " + ArrayHelper.reduce
-     (testArray, reduceFunction, "Sequence of elements: "));
-
-function filterFunction(item){
-    return item == "Item2";
-}
-
-alert("Filter command result " + ArrayHelper.filter(testArray, filterFunction));
-
-function forEachFunction(item){
-    item += "!";
-}
-
-alert("ForEach command result " + ArrayHelper.foreach(testArray, foreachFunction));
