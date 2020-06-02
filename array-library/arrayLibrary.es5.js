@@ -1,19 +1,11 @@
 function ArrayLibrary() {
 
     function take(array, n) {
-        if (n < 0) {
-            return array.slice(n);
-        } else {
-            return array.slice(0, n);
-        }
+        return (n > 0) ? array.slice(0, n) : null;
     }
 
     function skip(array, n) {
-        if (n > 0) {
-            return array.slice(n);
-        } else {
-            return array.slice(0, n);
-        }
+        return (n > 0) ? array.slice(n) : null;
     }
 
     function map(array, callback) {
@@ -33,68 +25,61 @@ function ArrayLibrary() {
     }
 
     function chain(array) {
-        var _queue = [];
+        return new ArrayChainLibrary.chain(array);
+    }
 
-        return {
-            take: function (number) {
-                function fn(number) {
-                    return function () {
-                        array = take(array, number);
-                    }
+    ArrayChainLibrary = {
+        chain: function (array) {
+            var _queue = [];
+            return {
+                take: function (number) {
+                    _queue.push(function () {
+                        return take(array, number)
+                    });
+
+                    return this;
+                },
+                skip: function (number) {
+                    _queue.push(function () {
+                        return skip(array, number)
+                    });
+
+                    return this;
+                },
+                map: function (callback) {
+                    _queue.push(function () {
+                        return map(array, callback)
+                    });
+
+                    return this;
+                },
+                reduce: function (callback, initialValue) {
+                    _queue.push(function () {
+                        return reduce(array, callback, initialValue)
+                    });
+
+                    return this;
+                },
+                filter: function (callback) {
+                    _queue.push(function () {
+                        return filter(array, callback)
+                    });
+
+                    return this;
+                },
+                foreach: function (callback) {
+                    _queue.push(function () {
+                        return foreach(array, callback)
+                    });
+
+                    return this;
+                },
+                value: function () {
+                    _queue.forEach(function (fn) {
+                        array = fn();
+                    });
+                    return array;
                 }
-                _queue.push(fn(number));
-                return this;
-            },
-            skip: function (number) {
-                function fn(number) {
-                    return function () {
-                        array = skip(array, number);
-                    }
-                }
-                _queue.push(fn(number));
-                return this;
-            },
-            map: function (callback) {
-                function fn(callback) {
-                    return function () {
-                        array = map(array, callback);
-                    }
-                }
-                _queue.push(fn(callback));
-                return this;
-            },
-            reduce: function (callback, initialValue) {
-                function fn(callback, initialValue) {
-                    return function () {
-                        array = reduce(array, callback, initialValue);
-                    }
-                }
-                _queue.push(fn(callback, initialValue));
-                return this;
-            },
-            filter: function (callback) {
-                function fn(callback) {
-                    return function () {
-                        array = filter(array, callback);
-                    }
-                }
-                _queue.push(fn(callback));
-                return this;
-            },
-            foreach: function (callback) {
-                function fn(callback) {
-                    return function () {
-                        array = foreach(array, callback);
-                    }
-                }
-                _queue.push(fn(callback));
-                return this;
-            },
-            value: function () {
-                _queue.forEach(function (fn) {
-                    fn();
-                });
-                return array;
             }
         }
     }

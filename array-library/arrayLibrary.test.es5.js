@@ -24,7 +24,7 @@ console.log(arrayLibrary
     .value());
 
 console.log("Take command result " + arrayLibrary.take(testArray, 1));
-console.log("Skip command result " + arrayLibrary.skip(testArray, -1));
+console.log("Skip command result " + arrayLibrary.skip(testArray, 3));
 console.log("Map command result " + arrayLibrary.map(testArray, mapFunction));
 console.log("Reduce command result " + arrayLibrary.reduce(testArray, reduceFunction, "Sequence of elements: "));
 console.log("Filter command result " + arrayLibrary.filter(testArray, filterFunction));
