@@ -1,11 +1,11 @@
 function ArrayLibrary() {
 
     function take(array, n) {
-        return (n > 0) ? array.slice(0, n) : null;
+        return (n > 0) ? array.slice(0, n) : [];
     }
 
     function skip(array, n) {
-        return (n > 0) ? array.slice(n) : null;
+        return (n > 0) ? array.slice(n) : [];
     }
 
     function map(array, callback) {
@@ -21,65 +21,66 @@ function ArrayLibrary() {
     }
 
     function foreach(array, callback) {
-        return array.forEach(callback);
+        array.forEach(callback);
+        return array;
     }
 
     function chain(array) {
-        return new ArrayChainLibrary.chain(array);
+        return new ArrayChainLibrary(array);
     }
 
-    ArrayChainLibrary = {
-        chain: function (array) {
-            var _queue = [];
-            return {
-                take: function (number) {
-                    _queue.push(function () {
-                        return take(array, number)
-                    });
+    function ArrayChainLibrary(array) {
+        var _queue = [];
 
-                    return this;
-                },
-                skip: function (number) {
-                    _queue.push(function () {
-                        return skip(array, number)
-                    });
+        return {
+            take: function (number) {
+                _queue.push(function () {
+                    return take(array, number)
+                });
 
-                    return this;
-                },
-                map: function (callback) {
-                    _queue.push(function () {
-                        return map(array, callback)
-                    });
+                return this;
+            },
+            skip: function (number) {
+                _queue.push(function () {
+                    return skip(array, number)
+                });
 
-                    return this;
-                },
-                reduce: function (callback, initialValue) {
-                    _queue.push(function () {
-                        return reduce(array, callback, initialValue)
-                    });
+                return this;
+            },
+            map: function (callback) {
+                _queue.push(function () {
+                    return map(array, callback)
+                });
 
-                    return this;
-                },
-                filter: function (callback) {
-                    _queue.push(function () {
-                        return filter(array, callback)
-                    });
+                return this;
+            },
+            reduce: function (callback, initialValue) {
+                _queue.push(function () {
+                    return reduce(array, callback, initialValue)
+                });
 
-                    return this;
-                },
-                foreach: function (callback) {
-                    _queue.push(function () {
-                        return foreach(array, callback)
-                    });
+                return this;
+            },
+            filter: function (callback) {
+                _queue.push(function () {
+                    return filter(array, callback)
+                });
 
-                    return this;
-                },
-                value: function () {
-                    _queue.forEach(function (fn) {
-                        array = fn();
-                    });
-                    return array;
-                }
+                return this;
+            },
+            foreach: function (callback) {
+                _queue.push(function () {
+                    return foreach(array, callback)
+                });
+
+                return this;
+            },
+            value: function () {
+                _queue.forEach(function (fn) {
+                    array = fn();
+                });
+                
+                return array;
             }
         }
     }
