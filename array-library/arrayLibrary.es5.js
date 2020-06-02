@@ -5,7 +5,7 @@ function ArrayLibrary() {
     }
 
     function skip(array, n) {
-        return (n > 0) ? array.slice(n) : [];
+        return (n > 0) ? array.slice(n) : array;
     }
 
     function map(array, callback) {
@@ -79,7 +79,7 @@ function ArrayLibrary() {
                 _queue.forEach(function (fn) {
                     array = fn();
                 });
-                
+
                 return array;
             }
         }
