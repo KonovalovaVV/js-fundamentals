@@ -1,7 +1,7 @@
 var testArray = ["Item1", "Item2", "Item3"];
 
-function foreachFunction(item) {
-    item += "!";
+function foreachFunction(_, index, sourceArray) {
+    sourceArray[index] += "!"
 }
 
 function filterFunction(item) {
